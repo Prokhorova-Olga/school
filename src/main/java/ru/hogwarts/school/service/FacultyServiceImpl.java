@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.hogwarts.school.model.Faculty;
+import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repository.FacultyRepository;
 
 
@@ -54,6 +55,22 @@ public class FacultyServiceImpl implements FacultyService {
 
     public void deleteFaculty(long id) {
         facultyRepository.deleteById(id);
+    }
+
+    public Collection<Faculty> getFacultyByNameOrColor(String query) {
+        return facultyRepository.findByNameContainingIgnoreCaseOrColorContainingIgnoreCase(query, query);
+    }
+
+    public Collection<Student> getStudentsByFacultyId(long facultyId) {
+        Faculty faculty = facultyRepository.findById(facultyId).orElse(null);
+        if (faculty == null) {
+            return new ArrayList<>();
+        }
+        Collection<Student> students = faculty.getStudents();
+        if (students == null) {
+            return new ArrayList<>();
+        }
+        return students;
     }
 
 }

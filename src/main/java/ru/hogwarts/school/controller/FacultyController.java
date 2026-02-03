@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.hogwarts.school.model.Faculty;
+import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.service.FacultyService;
 
 import java.util.Collection;
@@ -37,7 +38,10 @@ public class FacultyController {
     }
 
     @GetMapping
-    public ResponseEntity<Collection<Faculty>> getAllFaculties() {
+    public ResponseEntity<Collection<Faculty>> getFaculties(@RequestParam(required = false) String search) {
+        if (search != null && !search.isBlank()) {
+            return ResponseEntity.ok(facultyService.getFacultyByNameOrColor(search));
+        }
         return ResponseEntity.ok(facultyService.getAllFaculties());
     }
 
@@ -45,6 +49,12 @@ public class FacultyController {
     public ResponseEntity<Collection<Faculty>> getFacultyByColor(@PathVariable String color) {
         return ResponseEntity.ok(facultyService.getFacultyByColor(color));
     }
+
+    @GetMapping("{facultyId}/students")
+    public ResponseEntity<Collection<Student>> getStudentsByFacultyId(@PathVariable long facultyId) {
+        return ResponseEntity.ok(facultyService.getStudentsByFacultyId(facultyId));
+    }
+
 
     @PutMapping("{id}")
     public ResponseEntity<Faculty> updateFacultyById(@PathVariable long id, @RequestBody Faculty newFaculty) {
