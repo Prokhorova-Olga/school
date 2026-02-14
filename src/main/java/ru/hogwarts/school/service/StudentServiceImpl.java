@@ -3,6 +3,7 @@ package ru.hogwarts.school.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repository.StudentRepository;
 
@@ -54,5 +55,17 @@ public class StudentServiceImpl implements StudentService {
         studentRepository.deleteById(id);
     }
 
+    public Collection<Student> findStudentsByAgeBetweenTheParameters(int min, int max) {
+        Collection<Student> studentsResult = studentRepository.findByAgeBetween(min, max);
+        return studentsResult;
+    }
 
+    public Faculty getFacultyByStudentId(long studentId) {
+        Student student = studentRepository.findById(studentId).orElse(null);
+        if (student == null) {
+            return null;
+        }
+        Faculty faculty = student.getFaculty();
+        return faculty;
+    }
 }
