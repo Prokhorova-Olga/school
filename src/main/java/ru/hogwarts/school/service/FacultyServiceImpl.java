@@ -14,7 +14,9 @@ import java.util.*;
 @Transactional
 public class FacultyServiceImpl implements FacultyService {
 
+
     private final FacultyRepository facultyRepository;
+
 
     @Autowired
     public FacultyServiceImpl(FacultyRepository facultyRepository) {
