@@ -5,13 +5,14 @@ import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
 
 import java.util.Collection;
+import java.util.Optional;
 
 
 public interface StudentService {
 
     Student createStudent(Student student);
 
-    Student getStudentInfo(long id);
+    Optional<Student> getStudentInfo(long id);
 
     Student updateStudent(long id, Student newStudent);
 
