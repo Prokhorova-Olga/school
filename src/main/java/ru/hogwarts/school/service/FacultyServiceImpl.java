@@ -27,8 +27,8 @@ public class FacultyServiceImpl implements FacultyService {
         return facultyRepository.save(faculty);
     }
 
-    public Faculty getFacultyInfo(long id) {
-        return facultyRepository.findById(id).orElse(null);
+    public Optional<Faculty> getFacultyInfo(long id) {
+        return facultyRepository.findById(id);
     }
 
     public Collection<Faculty> getAllFaculties() {

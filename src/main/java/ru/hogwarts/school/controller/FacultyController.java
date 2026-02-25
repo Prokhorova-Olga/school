@@ -1,5 +1,6 @@
 package ru.hogwarts.school.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,19 +24,17 @@ public class FacultyController {
 
 
     @PostMapping
-    public ResponseEntity<Faculty> createFaculty(@RequestBody Faculty faculty) {
+    public ResponseEntity<Faculty> createFaculty(@Valid @RequestBody Faculty faculty) {
         Faculty createdFaculty = facultyService.createFaculty(faculty);
         return ResponseEntity.ok(createdFaculty);
     }
 
     @GetMapping("{id}")
     public ResponseEntity<Faculty> getFacultyInfoById(@PathVariable long id) {
-        Faculty faculty = facultyService.getFacultyInfo(id);
-        if (faculty == null) {
-            return ResponseEntity.notFound().build();
+        return  facultyService.getFacultyInfo(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
         }
-        return ResponseEntity.ok(faculty);
-    }
 
     @GetMapping
     public ResponseEntity<Collection<Faculty>> getFaculties(@RequestParam(required = false) String search) {
@@ -57,7 +56,7 @@ public class FacultyController {
 
 
     @PutMapping("{id}")
-    public ResponseEntity<Faculty> updateFacultyById(@PathVariable long id, @RequestBody Faculty newFaculty) {
+    public ResponseEntity<Faculty> updateFacultyById(@PathVariable long id, @Valid @RequestBody Faculty newFaculty) {
         Faculty updatedFaculty = facultyService.updateFaculty(id, newFaculty);
         if (updatedFaculty == null) {
             return ResponseEntity.notFound().build();
@@ -67,7 +66,7 @@ public class FacultyController {
 
     @DeleteMapping("{id}")
     public ResponseEntity<Void> deleteFacultyById(@PathVariable long id) {
-        if (facultyService.getFacultyInfo(id) == null) {
+        if (facultyService.getFacultyInfo(id).isEmpty()) {
             return ResponseEntity.notFound().build();
         }
         facultyService.deleteFaculty(id);

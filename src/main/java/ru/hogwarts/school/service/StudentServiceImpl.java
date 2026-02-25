@@ -24,8 +24,8 @@ public class StudentServiceImpl implements StudentService {
         return studentRepository.save(student);
     }
 
-    public Student getStudentInfo(long id) {
-        return studentRepository.findById(id).orElse(null);
+    public Optional<Student> getStudentInfo(long id) {
+        return studentRepository.findById(id);
     }
 
     public Collection<Student> getAllStudents() {

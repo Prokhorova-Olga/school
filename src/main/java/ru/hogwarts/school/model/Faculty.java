@@ -1,6 +1,7 @@
 package ru.hogwarts.school.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -10,8 +11,11 @@ import java.util.Collection;
 public class Faculty {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private Long id;
+
+    @NotBlank(message = "Имя факультета не должно быть пустым")
     private String name;
+    @NotBlank(message = "Название цвета не должно быть пустым")
     private String color;
 
     @JsonIgnore
@@ -22,18 +26,18 @@ public class Faculty {
     public Faculty() {
     }
 
-    public Faculty(long id, String name, String color, Collection<Student> students) {
+    public Faculty(Long id, String name, String color, Collection<Student> students) {
         this.id = id;
         this.name = name;
         this.color = color;
         this.students = students;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
