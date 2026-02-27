@@ -11,10 +11,8 @@ public class Student {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-
     @NotBlank(message = "Имя не должно быть пустым")
     private String name;
-
     @Min(value = 1, message = "Возраст должен быть больше 0")
     @Max(value = 150, message = "Возраст должен быть не старше 150 лет")
     private int age;

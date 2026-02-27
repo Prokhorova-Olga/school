@@ -11,7 +11,7 @@ public interface FacultyService {
 
     Faculty createFaculty(Faculty faculty);
 
-    Optional<Faculty> getFacultyInfo(long id);
+   Optional<Faculty> getFacultyInfo(long id);
 
     Faculty updateFaculty(long id, Faculty newFaculty);
 
