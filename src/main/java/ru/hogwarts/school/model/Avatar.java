@@ -53,7 +53,6 @@ public class Avatar {
 
     }
 
-
     @Override
     public String toString() {
         return "Avatar{" +
