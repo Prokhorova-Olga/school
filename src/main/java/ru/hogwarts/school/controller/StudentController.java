@@ -1,5 +1,6 @@
 package ru.hogwarts.school.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,18 +23,16 @@ public class StudentController {
     }
 
     @PostMapping
-    public ResponseEntity<Student> createStudent(@RequestBody Student student) {
+    public ResponseEntity<Student> createStudent(@Valid @RequestBody Student student) {
         Student createdStudent = studentService.createStudent(student);
         return ResponseEntity.ok(createdStudent);
     }
 
     @GetMapping("{id}")
     public ResponseEntity<Student> getStudentInfoById(@PathVariable long id) {
-        Student student = studentService.getStudentInfo(id);
-        if (student == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(student);
+        return studentService.getStudentInfo(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping
@@ -64,7 +63,7 @@ public class StudentController {
 
 
     @PutMapping("{id}")
-    public ResponseEntity<Student> updateStudentById(@PathVariable long id, @RequestBody Student newStudent) {
+    public ResponseEntity<Student> updateStudentById(@PathVariable long id, @Valid @RequestBody Student newStudent) {
         Student updatedStudent = studentService.updateStudent(id, newStudent);
         if (updatedStudent == null) {
             return ResponseEntity.notFound().build();
@@ -74,7 +73,7 @@ public class StudentController {
 
     @DeleteMapping("{id}")
     public ResponseEntity<Void> deleteStudentById(@PathVariable long id) {
-        if (studentService.getStudentInfo(id) == null) {
+        if (studentService.getStudentInfo(id).isEmpty()) {
             return ResponseEntity.notFound().build();
         }
         studentService.deleteStudent(id);
