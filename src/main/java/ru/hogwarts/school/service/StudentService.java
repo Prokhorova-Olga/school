@@ -1,6 +1,5 @@
 package ru.hogwarts.school.service;
 
-
 import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
 
@@ -25,5 +24,11 @@ public interface StudentService {
     Collection<Student> findStudentsByAgeBetweenTheParameters(int min, int max);
 
     Faculty getFacultyByStudentId(long studentId);
-}
 
+    Long findTotalStudents();
+
+    Double findAverageAgeOfStudents();
+
+    Collection<Student> findFiveMaxIdStudents();
+
+}

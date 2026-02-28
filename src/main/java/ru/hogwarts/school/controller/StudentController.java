@@ -31,7 +31,7 @@ public class StudentController {
     @GetMapping("{id}")
     public ResponseEntity<Student> getStudentInfoById(@PathVariable long id) {
         return studentService.getStudentInfo(id)
-                .map(ResponseEntity::ok )
+                .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
 
     }
@@ -80,5 +80,24 @@ public class StudentController {
         studentService.deleteStudent(id);
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping("/amount-students")
+    public ResponseEntity<Long> getStudentCount() {
+        Long count = studentService.findTotalStudents();
+        return ResponseEntity.ok(count);
+    }
+
+    @GetMapping("/average-age")
+    public ResponseEntity<Double> getAverageAgeOfStudents() {
+        Double averageAge = studentService.findAverageAgeOfStudents();
+        return ResponseEntity.ok(averageAge);
+    }
+
+    @GetMapping("/max-id")
+    public ResponseEntity<Collection<Student>> getFiveMaxIdStudents() {
+        Collection<Student> result = studentService.findFiveMaxIdStudents();
+        return ResponseEntity.ok(result);
+    }
+
 
 }
