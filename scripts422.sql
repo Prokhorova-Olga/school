@@ -1,0 +1,20 @@
+CREATE TABLE Drivers (
+id SERIAL PRIMARY KEY,
+name TEXT NOT NULL,
+age INTEGER CHECK (age>=18),
+drivers_license BOOLEAN
+);
+
+CREATE TABLE Cars (
+id SERIAL PRIMARY KEY,
+car_make TEXT NOT NULL,
+model TEXT NOT NULL,
+price INTEGER
+);
+
+ALTER TABLE Drivers
+ADD COLUMN id_car INTEGER;
+
+ALTER TABLE Drivers
+ADD FOREIGN KEY (id_car)
+REFERENCES Cars (id);
