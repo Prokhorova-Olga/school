@@ -1,0 +1,11 @@
+databaseChangeLog:
+  - include:
+      file: liquibase/scripts/student-add-indexes.sql
+  - include:
+      file: liquibase/scripts/faculty-add-indexes.sql
+
+
+
+
+
+
