@@ -1,5 +1,7 @@
 package ru.hogwarts.school.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -20,14 +22,17 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Optional;
 
+
 import static java.nio.file.StandardOpenOption.CREATE_NEW;
 
 @Service
 @Transactional
 public class AvatarServiceImpl implements AvatarService {
 
+    private static final Logger logger = LoggerFactory.getLogger(AvatarServiceImpl.class);
     private final AvatarRepository avatarRepository;
     private final StudentRepository studentRepository;
+
 
     @Value("${path.to.avatars.folder}")
     private String avatarsDir;
@@ -41,8 +46,12 @@ public class AvatarServiceImpl implements AvatarService {
 
     @Override
     public void uploadAvatar(Long studentId, MultipartFile avatarFile) throws IOException {
+        logger.info("Was invoked method for upload avatar");
         Student student = studentRepository.findById(studentId)
-                .orElseThrow(() -> new RuntimeException("Student not found with id: " + studentId));
+                .orElseThrow(() -> {
+                    logger.error("Student with id = {} not found", studentId);
+                    return new RuntimeException("Student not found with id: " + studentId);
+                });
         Path filePath = Path.of(avatarsDir, studentId + "." + getExtensions(avatarFile.getOriginalFilename()));
         Files.createDirectories(filePath.getParent());
         Files.deleteIfExists(filePath);
@@ -63,6 +72,7 @@ public class AvatarServiceImpl implements AvatarService {
 
 
     private byte[] generateDataForDB(Path filePath) throws IOException {
+        logger.info("Was invoked method For generate data for database");
         try (
                 InputStream is = Files.newInputStream(filePath);
                 BufferedInputStream bis = new BufferedInputStream(is, 1024);
@@ -84,16 +94,19 @@ public class AvatarServiceImpl implements AvatarService {
 
     @Override
     public Optional<Avatar> findAvatar(long studentId) {
+        logger.info("Was invoked method for find avatar");
         return avatarRepository.findByStudentId(studentId);
 
     }
 
     private String getExtensions(String fileName) {
+        logger.info("Was invoked method for get extensions");
         return fileName.substring(fileName.lastIndexOf(".") + 1);
     }
 
     @Override
     public Page<Avatar> getAllAvatars(int pageNumber, int pageSize) {
+        logger.info("Was invoked method for get all avatars");
         PageRequest pageRequest = PageRequest.of(pageNumber - 1, pageSize);
         return avatarRepository.findAll(pageRequest);
     }
