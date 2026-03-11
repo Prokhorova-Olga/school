@@ -9,6 +9,8 @@ import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.service.FacultyService;
 
 import java.util.Collection;
+import java.util.Comparator;
+import java.util.stream.LongStream;
 
 
 @RestController
@@ -31,10 +33,10 @@ public class FacultyController {
 
     @GetMapping("{id}")
     public ResponseEntity<Faculty> getFacultyInfoById(@PathVariable long id) {
-        return  facultyService.getFacultyInfo(id)
+        return facultyService.getFacultyInfo(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
-        }
+    }
 
     @GetMapping
     public ResponseEntity<Collection<Faculty>> getFaculties(@RequestParam(required = false) String search) {
@@ -73,4 +75,22 @@ public class FacultyController {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/the-longest-faculty-name")
+    public ResponseEntity<String> getTheLongestFacultyName() {
+        String name = facultyService.getAllFaculties().stream()
+                .map(Faculty::getName)
+                .max(Comparator.comparingInt(String::length))
+                .orElse("");
+        return ResponseEntity.ok(name);
+
+    }
+
+    @GetMapping("/fast-return-of-an-integer-expression")
+    public Long getIntegerValue() {
+        return LongStream.rangeClosed(1, 1_000_000)
+                .parallel()
+                .sum();
+    }
 }
+
+
