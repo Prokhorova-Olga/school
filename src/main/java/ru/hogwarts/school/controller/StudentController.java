@@ -8,6 +8,7 @@ import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.service.StudentService;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -119,6 +120,71 @@ public class StudentController {
                 .sorted()
                 .collect(Collectors.toList());
         return ResponseEntity.ok(names);
+    }
+
+    @GetMapping("/print-parallel")
+    public ResponseEntity<Void> getStudentName() {
+        List<String> name = studentService.getAllStudents().stream()
+                .map(Student::getName)
+                .limit(6)
+                .toList();
+        if (name.size() > 0) {
+            System.out.println(name.get(0));
+        }
+        if (name.size() > 1) {
+            System.out.println(name.get(1));
+        }
+
+        Thread threadOne = new Thread(() -> {
+            if (name.size() > 2) {
+                System.out.println(name.get(2));
+            }
+            if (name.size() > 3) {
+                System.out.println(name.get(3));
+            }
+        });
+        threadOne.start();
+
+        Thread threadTwo = new Thread(() -> {
+            if (name.size() > 4) {
+                System.out.println(name.get(4));
+            }
+            if (name.size() > 5) {
+                System.out.println(name.get(5));
+            }
+        });
+        threadTwo.start();
+
+        return ResponseEntity.ok().build();
+
+    }
+
+    private synchronized void printName(String name) {
+        System.out.println(name);
+    }
+
+    @GetMapping("/print-synchronized")
+    public ResponseEntity<List<String>> getSynchronizedStudentName() {
+        List<String> name = studentService.getAllStudents().stream()
+                .map(Student::getName)
+                .limit(6)
+                .toList();
+        if (name.size() > 0) { printName(name.get(0));}
+        if (name.size() > 1) { printName(name.get(1));}
+
+        Thread threadOne = new Thread(() -> {
+            if (name.size() > 2) { printName(name.get(2));}
+            if (name.size() > 3) { printName(name.get(3));}
+        });
+        threadOne.start();
+
+        Thread threadTwo = new Thread(() -> {
+            if (name.size() > 4) { printName(name.get(4));}
+            if (name.size() > 5) { printName(name.get(5));}
+        });
+        threadTwo.start();
+
+        return ResponseEntity.ok(name);
     }
 
 }
